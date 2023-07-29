@@ -6,8 +6,25 @@ Caso não exista uma pasta para o tipo do arquivo, uma nova pasta
 as extensões serão consideradas. Arquivos de imagem ficarão juntos
 """
 import os
+from typing import Optional
+
+from file_organizer import FileOrganizer, PdfOrganizer, ImageOrganizer, ZipOrganizer
 
 FOLDER_PATH = "/home/guilherme/Downloads"
+
+
+def get_file_organizer(file_extension: str) -> Optional[FileOrganizer]:
+    if file_extension[0] == ".":
+        file_extension = file_extension[1:]
+
+    if file_extension in PdfOrganizer.extensions_supported():
+        return PdfOrganizer(FOLDER_PATH)
+    elif file_extension in ImageOrganizer.extensions_supported():
+        return ImageOrganizer(FOLDER_PATH)
+    elif file_extension in ZipOrganizer.extensions_supported():
+        return ZipOrganizer(FOLDER_PATH)
+
+    return None
 
 
 def get_file_extension(file_name: str):
@@ -19,7 +36,9 @@ def get_file_extension(file_name: str):
 
 def organize_files():
     for file in os.listdir(FOLDER_PATH):
-        print(file)
+        organizer = get_file_organizer(get_file_extension(file))
+        if organizer:
+            organizer.organize(file)
 
 
 def main():
