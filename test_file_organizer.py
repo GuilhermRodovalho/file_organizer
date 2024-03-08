@@ -3,11 +3,12 @@ import shutil
 
 from file_organizer import PdfOrganizer
 
-from main import organize_files
+from main import organize_epub_files, organize_files
 
 
 def test_organize_files():
     organize_files()
+    organize_epub_files()
 
 
 def test_pdf_organizer():
@@ -39,5 +40,5 @@ def test_pdf_organizer():
     shutil.rmtree(temp_dir)
 
 
-test_pdf_organizer()
 test_organize_files()
+test_pdf_organizer()

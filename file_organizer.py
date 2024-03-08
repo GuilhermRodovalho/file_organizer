@@ -35,15 +35,24 @@ class FileOrganizer(ABC):
         self.check_file(file_name)
         self.create_folder()
 
-        # Move the file to the PDFs folder
+        # Move the file to the folder
+        self.move_file(file_name, self.this_folder)
+
+    def move_file(self, file_name: str, destination_folder: str):
+        """
+        Move the file to the destination folder
+        """
+        if not os.path.exists(destination_folder):
+            os.mkdir(destination_folder)
+
         try:
             os.rename(
                 os.path.join(self.root_folder, file_name),
-                os.path.join(self.this_folder, os.path.basename(file_name)),
+                os.path.join(destination_folder, os.path.basename(file_name)),
             )
         except OSError as err:
             error_message = (
-                f"Failed to move file {file_name} to {self.this_folder}: {err}"
+                f"Failed to move file {file_name} to {destination_folder}: {err}"
             )
             print(error_message)
             raise FileCreationError(error_message)
@@ -67,11 +76,15 @@ class FileOrganizer(ABC):
         return False
 
     def check_file(self, file_name: str):
+        """
+        Check if the file is a supported file type
+        """
         file_extension = file_name.split(".")[-1]
         if file_extension not in self.extensions_supported():
             raise FileTypeError(f"File {file_name} is not a supported file type")
 
     @staticmethod
+    @abstractmethod
     def extensions_supported() -> List[str]:
         pass
 
@@ -158,3 +171,15 @@ class ZipOrganizer(FileOrganizer):
             "z",
             "zip",
         ]
+
+
+class EpubOrganizer(FileOrganizer):
+    def __init__(self, root_folder: str) -> None:
+        super().__init__(
+            root_folder=root_folder,
+        )
+        self.this_folder = os.path.join(root_folder, "Books")
+
+    @staticmethod
+    def extensions_supported() -> List[str]:
+        return ["epub", "mobi"]
