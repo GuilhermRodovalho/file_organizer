@@ -1,9 +1,3 @@
-Determinando a estrutura do workspace
-
-Decidindo quais informações do workspace coletar
-
-Coletando informações do workspace
-
 # Organizador de Arquivos
 
 Este projeto é um script Python que organiza arquivos em um diretório específico de acordo com suas extensões. Ele foi projetado para organizar a pasta de downloads, mas pode ser adaptado para qualquer pasta.
